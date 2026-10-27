@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaperPilot | Academic Resource Hub</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="bad-ui.css">
+</head>
+<body data-ui="bad">
+  <header class="site-header">
+    <div class="nav-shell">
+    <a class="brand" href="#" data-home aria-label="PaperPilot dashboard">
+      <picture class="brand-mark" aria-hidden="true">
+        <img class="brand-mark-light" src="paperpilot-plane-light.png" alt="">
+        <img class="brand-mark-dark" src="paperpilot-plane-dark.png" alt="">
+      </picture>
+      <span class="brand-wordmark">PaperPilot</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-controls="primaryNav" aria-expanded="false">☰</button>
+
+    <nav class="primary-nav" id="primaryNav" aria-label="Main navigation">
+      <a class="mobile-nav-brand" href="#" data-home aria-label="PaperPilot dashboard">
+        <picture class="mobile-nav-mark" aria-hidden="true">
+          <img class="brand-mark-light" src="paperpilot-plane-light.png" alt="">
+          <img class="brand-mark-dark" src="paperpilot-plane-dark.png" alt="">
+        </picture>
+        <span class="mobile-nav-wordmark">PaperPilot</span>
+      </a>
+      <button class="nav-link active" data-home><span>Dashboard</span></button>
+      <button class="nav-link" id="allSubjectsBtn"><span>Browse Departments</span></button>
+      <button class="nav-link" id="resourcesNav"><span>Resource Library</span></button>
+      <button class="nav-link" id="uploadNav"><span>Upload Resource</span></button>
+      <button class="nav-link hidden" id="logoutNav" type="button"><span>Logout</span></button>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme" aria-pressed="false">
+        <span aria-hidden="true">☾</span><span class="theme-label">Dark mode</span>
+      </button>
+      <div class="auth-actions">
+        <button class="login-nav-button" id="loginNavButton" type="button">Login</button>
+        <button class="user-avatar hidden" id="userAvatar" type="button" aria-label="Account signed in">A</button>
+      </div>
+    </div>
+    </div>
+  </header>
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">YOUR LEARNING SPACE</p>
+        <h2 id="topHeading">Dashboard</h2>
+      </div>
+    </header>
+
+    <section id="dashboard-view" class="page active">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="pill">YOUR CAMPUS RESOURCE HUB</span>
+          <h1><span class="hero-title-primary">Find your next</span><br><span class="hero-title-accent">study resource.</span></h1>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-sheet sheet-back"></div>
+          <div class="art-sheet sheet-front">
+            <span>✦</span>
+            <div class="art-line"></div>
+            <div class="art-line short"></div>
+            <div class="art-line"></div>
+            <div class="art-line medium"></div>
+          </div>
+          <div class="art-circle">P</div>
+        </div>
+      </div>
+
+      <section class="search-panel">
+        <div>
+          <p class="eyebrow">QUICK SEARCH</p>
+          <h2>What are you looking for?</h2>
+        </div>
+        <form id="searchForm" class="search-controls">
+          <label class="search-input">
+            <span>⌕</span>
+            <input id="searchInput" placeholder="Search department or subject..." autocomplete="off">
+          </label>
+          <select id="departmentSelect" aria-label="Select department">
+            <option value="">All departments</option>
+          </select>
+          <button class="primary-btn" type="submit">Search</button>
+        </form>
+        <div id="searchResults" class="search-results hidden"></div>
+      </section>
+
+      <section class="quick-access-section" aria-labelledby="quickAccessTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">YOUR LIBRARY</p>
+            <h2 id="quickAccessTitle">Quick Access</h2>
+          </div>
+        </div>
+        <div class="quick-access-grid">
+          <button class="quick-access-card" type="button" data-open-my-files="uploads">
+            <span class="quick-access-count" id="myUploadsCount">0</span>
+            <span class="quick-access-label">My Uploads</span>
+            <span class="quick-access-action">View uploads</span>
+          </button>
+          <button class="quick-access-card" type="button" data-open-my-files="downloads">
+            <span class="quick-access-count" id="myDownloadsCount">0</span>
+            <span class="quick-access-label">My Downloads</span>
+            <span class="quick-access-action">View downloads</span>
+          </button>
+        </div>
+      </section>
+
+    </section>
+
+    <section id="login-view" class="page">
+      <div class="login-card">
+        <aside id="loginRequirement" class="login-requirement hidden" role="status" aria-live="polite">
+          <strong id="loginRequirementTitle"></strong>
+          <p id="loginRequirementMessage"></p>
+        </aside>
+        <h1>Welcome to PaperPilot</h1>
+        <button class="primary-btn google-login-button" id="google-login-btn" type="button">
+          <span class="google-mark" aria-hidden="true">G</span>
+          <span id="google-login-label">Continue with Google</span>
+        </button>
+        <div class="login-divider"><span>or continue with email</span></div>
+        <form id="emailLoginForm" class="email-login-form">
+          <label id="loginNameField" class="hidden"><span class="field-label-text">Full name <span class="required-mark" aria-hidden="true">*</span></span>
+            <input id="loginName" type="text" autocomplete="name" maxlength="80">
+          </label>
+          <label><span class="field-label-text">Email <span class="required-mark" aria-hidden="true">*</span></span>
+            <input id="loginEmail" type="email" autocomplete="email" required placeholder="name@example.com">
+          </label>
+          <label><span class="field-label-text">Password <span class="required-mark" aria-hidden="true">*</span></span>
+            <input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters">
+          </label>
+          <button class="primary-btn" id="emailLoginSubmit" type="submit">Sign in</button>
+        </form>
+        <button class="auth-mode-toggle" id="authModeToggle" type="button">Create an account</button>
+        <p id="authFeedback" class="auth-feedback" role="status" aria-live="polite"></p>
+        <button class="back-link" id="loginBackButton" type="button">← Back to dashboard</button>
+      </div>
+    </section>
+
+    <section id="myFilesPage" class="page">
+      <button class="back-link" data-back-home>← Back to dashboard</button>
+      <section id="myUploads" class="my-uploads-section">
+        <div class="uploads-heading">
+          <div>
+            <p class="eyebrow">YOUR PAPERPILOT LIBRARY</p>
+            <h2>My Uploads &amp; Downloads</h2>
+            <p id="userWelcome" class="muted"></p>
+          </div>
+        </div>
+        <div class="uploads-tabs" role="tablist" aria-label="My files">
+          <button class="uploads-tab active" id="uploadsTab" type="button" role="tab" aria-selected="true">My Uploads</button>
+          <button class="uploads-tab" id="downloadsTab" type="button" role="tab" aria-selected="false">My Downloads</button>
+        </div>
+        <div class="uploads-controls" id="uploadsControls">
+          <input id="uploadsSearch" type="search" placeholder="Search file names..." aria-label="Search uploads">
+          <select id="uploadsSubjectFilter" aria-label="Filter by subject">
+            <option value="">All subjects</option>
+          </select>
+          <select id="uploadsSemesterFilter" aria-label="Filter by semester">
+            <option value="">All semesters</option>
+            <option value="1">Semester 1</option><option value="2">Semester 2</option>
+            <option value="3">Semester 3</option><option value="4">Semester 4</option>
+            <option value="5">Semester 5</option><option value="6">Semester 6</option>
+            <option value="7">Semester 7</option><option value="8">Semester 8</option>
+          </select>
+        </div>
+        <button class="text-btn clear-history-btn hidden" id="clearDownloadsBtn" type="button">Clear All History</button>
+        <div id="uploadsGrid" class="uploads-grid" aria-live="polite"></div>
+      </section>
+    </section>
+
+    <section id="departments-view" class="page">
+      <button class="back-link" data-back-home>← Back to dashboard</button>
+      <div class="page-intro">
+        <p class="eyebrow">DEPARTMENT EXPLORER</p>
+        <h1 id="departmentTitle">Browse Departments</h1>
+        <p id="departmentDescription" class="muted">Choose a department to explore its semesters and subjects.</p>
+      </div>
+      <div id="browseDepartmentGrid" class="department-grid"></div>
+      <button class="back-link hidden" id="browseAllDepartments" type="button">← All departments</button>
+      <div id="semesterGrid" class="semester-grid hidden"></div>
+    </section>
+
+    <section id="semesterSubjectsPage" class="page">
+      <div class="page-intro">
+        <p class="eyebrow" id="semesterSubjectsBreadcrumb">DEPARTMENT · SEMESTER 1</p>
+        <h1 id="semesterSubjectsTitle">Semester 1 → Subjects</h1>
+      </div>
+      <button class="back-link" id="backToSemesters" type="button">← Back to semesters</button>
+      <div id="subjectGrid" class="subject-grid semester-subjects-grid"></div>
+    </section>
+
+    <section id="subjectPage" class="page">
+      <button class="back-link" id="backToSubjects">← Back to subjects</button>
+      <div class="page-intro">
+        <p class="eyebrow" id="subjectBreadcrumb">SUBJECT RESOURCES</p>
+        <h1 id="resourceSubjectTitle">Subject name</h1>
+        <p class="muted" id="resourceSubjectDescription">Study material for this subject.</p>
+      </div>
+      <div class="resource-toolbar">
+        <div id="resourceFilters" class="filter-chips">
+          <button class="chip active" data-filter="All">All resources</button>
+          <button class="chip" data-filter="Notes">Notes</button>
+          <button class="chip" data-filter="PPT">PPTs & Slides</button>
+          <button class="chip" data-filter="Past Papers">Past Papers</button>
+          <button class="chip" data-filter="Books">Books</button>
+          <button class="chip" data-filter="Viva Questions">Viva Questions</button>
+        </div>
+      </div>
+      <div id="resourceList" class="resource-list"></div>
+    </section>
+
+    <section id="libraryPage" class="page">
+      <div class="page-intro">
+        <p class="eyebrow">YOUR STUDY COLLECTION</p>
+        <h1>Resource Library</h1>
+        <p class="muted">Explore available resources across all departments.</p>
+      </div>
+      <div class="library-controls">
+        <input id="librarySearch" placeholder="Search resource title or subject...">
+        <select id="libraryDepartment">
+          <option value="">All departments</option>
+        </select>
+        <select id="libraryType">
+          <option value="">All resource types</option>
+          <option>Notes</option>
+          <option>PPT</option>
+          <option>Past Papers</option>
+          <option>Books</option>
+          <option>Viva Q:</option>
+        </select>
+      </div>
+      <div id="libraryList" class="resource-list"></div>
+    </section>
+
+    <section id="uploadPage" class="page">
+      <button class="back-link" id="uploadBackBtn">← Back to dashboard</button>
+      <div class="page-intro">
+        <p class="eyebrow">CONTRIBUTE TO THE COMMUNITY</p>
+        <h1>Upload a resource</h1>
+      </div>
+
+      <form id="uploadForm" class="upload-card" novalidate>
+        <div class="form-heading">
+          <span class="form-icon">↑</span>
+          <div>
+            <h2>Upload study files</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label><span class="field-label-text">Uploaded By / Full Name <span class="required-mark" aria-hidden="true">*</span></span>
+            <input id="uploaderName" required placeholder="Your full name" autocomplete="name">
+          </label>
+          <label><span class="field-label-text">Department <span class="required-mark" aria-hidden="true">*</span></span>
+            <select id="uploadDepartment" required>
+              <option value="">Select department</option>
+              <option value="CS">CS</option><option value="SE">SE</option>
+              <option value="IT">IT</option><option value="BBA">BBA</option>
+              <option value="Computer Systems Engineering">Computer Systems Engineering</option>
+              <option value="Electronic Engineering">Electronic Engineering</option>
+              <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+              <option value="Textile Engineering">Textile Engineering</option>
+            </select>
+          </label>
+          <label><span class="field-label-text">Semester <span class="required-mark" aria-hidden="true">*</span></span>
+            <select id="uploadSemester" required disabled>
+              <option value="">Select department first</option>
+              <option value="1">Semester 1</option><option value="2">Semester 2</option>
+              <option value="3">Semester 3</option><option value="4">Semester 4</option>
+              <option value="5">Semester 5</option><option value="6">Semester 6</option>
+              <option value="7">Semester 7</option><option value="8">Semester 8</option>
+            </select>
+          </label>
+          <div class="form-grid-field">
+            <label for="uploadSubject" class="field-label-text">Subject <span class="required-mark" aria-hidden="true">*</span></label>
+            <select id="uploadSubject" required disabled aria-label="Subject">
+              <option value="">Select semester first</option>
+            </select>
+            <input id="uploadSubjectCustom" class="hidden" placeholder="Enter subject name" aria-label="Enter subject name">
+          </div>
+          <label>Category
+            <select id="uploadCategory">
+              <option value="">Select category</option>
+              <option>Notes</option><option>Past Papers</option><option>Slides</option>
+              <option>Books</option><option>Assignments</option><option>Other</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="same-info-control"><input id="sameInfoCheckbox" type="checkbox" checked> Apply same info to all files</label>
+        <div class="file-drop" id="fileDropZone" role="button" tabindex="0" aria-label="Drag and drop files or click to browse">
+          <span class="upload-symbol">⇧</span>
+          <strong>Drag &amp; Drop or Click to Browse</strong>
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.png,.jpg">
+        </div>
+        <div id="selectedFiles" class="selected-files" aria-live="polite"></div>
+        <p id="draftNotice" class="draft-notice hidden" role="status"></p>
+        <div id="uploadProgress" class="upload-progress hidden" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="uploadProgressBar"></div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="text-btn" id="cancelUpload">Cancel</button>
+          <button type="submit" class="primary-btn">Upload All ↗</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="downloadPage" class="page">
+      <button class="back-link" id="downloadBackBtn">← Back to resources</button>
+      <div class="download-card">
+        <div class="download-icon">↓</div>
+        <p class="eyebrow">DOWNLOAD RESOURCE</p>
+        <h1 id="downloadTitle">Resource title</h1>
+        <p id="downloadDetails" class="muted"></p>
+        <div class="download-file">
+          <span class="file-badge">FILE</span>
+          <div><strong id="downloadFileName">resource.pdf</strong><small id="downloadOriginalFormat">Original file format</small></div>
+        </div>
+        <label class="download-format-label">Choose available format
+          <select id="downloadFormat">
+            <option value="original">Download original file</option>
+          </select>
+        </label>
+        <p class="muted small-note">Only the original format is downloadable in this demo. Converting a file into Word, PDF or PowerPoint requires a conversion service.</p>
+        <button class="primary-btn wide-btn" id="downloadAction">↓ Download file</button>
+      </div>
+    </section>
+
+    <footer>PaperPilot © 2026 <span>Made for smarter studying ✦</span></footer>
+  </main>
+
+  <div id="toast-container"><div id="toast" class="toast" role="status"></div></div>
+  <div class="modal-overlay hidden" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="confirm-modal">
+      <h2 id="deleteModalTitle">Delete upload?</h2>
+      <p id="deleteModalMessage"></p>
+      <div class="form-actions">
+        <button class="text-btn" id="cancelDeleteBtn" type="button">Cancel</button>
+        <button class="danger-btn" id="confirmDeleteBtn" type="button">Delete</button>
+      </div>
+    </div>
+  </div>
+  <div class="logout-confirm-overlay hidden" id="logoutConfirmModal">
+    <section class="logout-confirm-card" role="dialog" aria-modal="true"
+      aria-labelledby="logoutConfirmTitle" aria-describedby="logoutConfirmDescription" tabindex="-1">
+      <div class="logout-confirm-icon" aria-hidden="true">!</div>
+      <h2 id="logoutConfirmTitle">Log out of PaperPilot?</h2>
+      <p id="logoutConfirmDescription">Are you sure you want to logout?</p>
+      <p id="logoutConfirmError" role="alert" aria-live="assertive"></p>
+      <div class="logout-confirm-actions">
+        <button class="logout-cancel-btn" id="cancelLogoutConfirm" type="button">No, Stay Signed In</button>
+        <button class="logout-yes-btn" id="confirmLogoutConfirm" type="button">Yes, Logout</button>
+      </div>
+    </section>
+  </div>
+  <div class="logout-confirm-overlay" id="googleSuccessModal" hidden>
+    <section class="google-success-card" role="dialog" aria-modal="true"
+      aria-labelledby="googleSuccessTitle" aria-describedby="googleSuccessMessage" tabindex="-1">
+      <div class="google-success-icon" aria-hidden="true">✓</div>
+      <h2 id="googleSuccessTitle">Successfully Signed In!</h2>
+      <p id="googleSuccessMessage"></p>
+      <p class="google-success-countdown">Opening your dashboard in 2 seconds.</p>
+      <button class="google-success-action" id="googleSuccessDashboard" type="button">Go to Dashboard</button>
+    </section>
+  </div>
+  <div class="logout-confirm-overlay" id="googleAccountModal" hidden>
+    <section class="google-review-card" role="dialog" aria-modal="true"
+      aria-labelledby="googleReviewTitle" aria-describedby="googleReviewDescription" tabindex="-1">
+      <h2 id="googleReviewTitle">Is this your account?</h2>
+      <p id="googleReviewDescription">You’re signing in to PaperPilot as:</p>
+      <div class="google-review-user">
+        <div class="google-review-avatar">
+          <img id="googleReviewPhoto" alt="" hidden>
+          <span id="googleReviewInitial">G</span>
+        </div>
+        <div class="google-review-user-details">
+          <p id="googleReviewName"></p>
+          <p id="googleReviewEmail"></p>
+        </div>
+      </div>
+      <p class="google-review-switch-hint">Not your account? Cancel and choose another.</p>
+      <p id="googleReviewError" class="google-review-error" role="alert" aria-live="assertive"></p>
+      <div class="logout-confirm-actions">
+        <button class="logout-cancel-btn" id="cancelGoogleReview" type="button">No, cancel</button>
+        <button class="logout-yes-btn" id="confirmGoogleReview" type="button">Yes, sign in</button>
+      </div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+  <script type="module" src="login.js"></script>
+</body>
+</html>

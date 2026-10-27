@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f3ff">
+  <title>Login | PaperPilot</title>
+  <link rel="stylesheet" href="bad-ui.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"
+      }
+    }
+  </script>
+  <style>
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    input { outline: none; }
+    input:focus { border-color: #6a35c1; box-shadow: 0 0 0 3px rgb(106 53 193 / 12%); }
+    [hidden] { display: none !important; }
+    .login-actions button { min-height: 46px; }
+    .forgot-password-button { min-height: 44px; }
+    .google-review-backdrop { background: rgb(25 17 42 / 50%); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+    .google-review-dialog { box-sizing: border-box; border: 1px solid #e4dced; background: #fff; padding: 28px; color: #1f2937; box-shadow: 0 24px 70px rgb(18 12 32 / 30%); animation: google-review-enter 160ms ease-out; }
+    .google-account-row { display: flex; align-items: center; gap: 14px; border: 1px solid #e4dced; border-radius: 16px; background: #faf9fc; padding: 14px; text-align: left; }
+    .google-account-avatar { display: grid; width: 52px; height: 52px; flex: 0 0 52px; place-items: center; overflow: hidden; border-radius: 50%; background: #ede7ff; color: #5427a5; font-weight: 700; }
+    .google-account-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .google-account-details { min-width: 0; }
+    .google-account-details p { overflow: hidden; margin: 0; text-overflow: ellipsis; white-space: nowrap; }
+    .google-account-details p:first-child { color: #1f2937; font-weight: 700; }
+    .google-account-details p:last-child { margin-top: 3px; color: #64748b; font-size: 14px; }
+    .google-review-dialog button { min-height: 46px; }
+    .google-login-toast { position: fixed; z-index: 70; right: 16px; bottom: 16px; max-width: min(420px, calc(100vw - 32px)); border: 1px solid #e4dced; border-radius: 14px; background: #fff; padding: 14px 18px; color: #334155; box-shadow: 0 12px 32px rgb(18 12 32 / 18%); font-size: 14px; font-weight: 600; }
+    .google-success-card { box-sizing: border-box; border: 1px solid #e4dced; background: #fff; padding: 28px; color: #1f2937; box-shadow: 0 24px 70px rgb(18 12 32 / 30%); }
+    .google-success-icon { display: grid; width: 58px; height: 58px; place-items: center; margin: 0 auto; border-radius: 50%; background: #e8f7ed; color: #188044; font-size: 32px; font-weight: 800; }
+    .required-mark { color: #3f3428; font-weight: 700; }
+    .field-label-text { display: block; margin-bottom: 6px; line-height: 1.5; text-align: left; }
+    @keyframes google-review-enter { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @media (max-width: 380px) {
+      main > section.w-full { padding: 22px 18px; }
+      .login-actions.login-actions { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { .google-review-dialog { animation: none; } }
+  </style>
+</head>
+<body data-auth-page="login" data-ui="bad" class="min-h-screen bg-[#f6f3ff] text-slate-800">
+  <main class="flex min-h-screen items-center justify-center px-4 py-10">
+    <section class="w-full max-w-md rounded-3xl border border-[#e9e2f3] bg-white p-7 shadow-xl shadow-purple-950/5 sm:p-9">
+      <a href="index.html" class="mb-8 inline-flex items-center gap-2 text-xl font-bold tracking-tight text-[#6a35c1]">
+        <span aria-hidden="true" class="grid h-9 w-9 place-items-center rounded-xl bg-[#ede7ff]">✦</span>
+        PaperPilot
+      </a>
+      <h1 class="text-3xl font-bold tracking-tight">Welcome to PaperPilot</h1>
+      <button id="google-login-btn" type="button" aria-busy="false" disabled class="mt-7 flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 font-semibold transition hover:bg-slate-50 disabled:cursor-wait disabled:opacity-60">
+        <svg aria-hidden="true" viewBox="0 0 48 48" class="h-5 w-5">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.65 5.93c4.46-4.12 7.13-10.2 7.13-17.58Z"/>
+          <path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.75-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.88.93 7.55 2.56 10.78l7.97-6.19Z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.87l-7.65-5.93c-2.13 1.43-4.85 2.28-8.25 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/>
+        </svg>
+        <span id="google-login-label">Loading sign-in...</span>
+      </button>
+
+      <div class="my-6 flex items-center gap-4 text-xs font-medium uppercase tracking-wider text-slate-400">
+        <span class="h-px flex-1 bg-slate-200"></span><span>or use email</span><span class="h-px flex-1 bg-slate-200"></span>
+      </div>
+
+      <form id="emailLoginForm" class="space-y-4">
+        <label id="loginNameField" class="block hidden">
+          <span class="field-label-text mb-1.5 text-sm font-medium">Full Name <span class="required-mark" aria-hidden="true">*</span></span>
+          <input id="loginName" name="name" type="text" autocomplete="name" maxlength="80" placeholder="Your full name" class="w-full rounded-xl border border-slate-200 px-4 py-3 transition">
+        </label>
+        <label class="block">
+          <span class="field-label-text mb-1.5 text-sm font-medium">Email <span class="required-mark" aria-hidden="true">*</span></span>
+          <input id="loginEmail" name="email" type="email" autocomplete="email" required placeholder="name@example.com" class="w-full rounded-xl border border-slate-200 px-4 py-3 placeholder:text-slate-400 transition">
+        </label>
+        <label class="block">
+          <span class="field-label-text mb-1.5 text-sm font-medium">Password <span class="required-mark" aria-hidden="true">*</span></span>
+          <input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters" class="w-full rounded-xl border border-slate-200 px-4 py-3 placeholder:text-slate-400 transition">
+        </label>
+        <div class="login-actions grid grid-cols-2 gap-3 pt-1">
+          <button id="emailLoginSubmit" data-auth-mode="signin" type="submit" disabled class="rounded-xl bg-[#6a35c1] px-4 py-3 font-semibold text-white transition hover:bg-[#5829a6] disabled:cursor-wait disabled:opacity-60">Login</button>
+          <button id="createAccountButton" data-auth-mode="signup" type="submit" formnovalidate disabled class="rounded-xl bg-[#ede7ff] px-4 py-3 font-semibold text-[#5427a5] transition hover:bg-[#e2d8ff] disabled:cursor-wait disabled:opacity-60">Create Account</button>
+        </div>
+      </form>
+
+      <p id="authFeedback" role="status" aria-live="polite" aria-atomic="true" class="mt-4 min-h-5 text-sm text-slate-600"></p>
+      <a href="index.html" class="mt-3 block text-center text-sm font-medium text-[#6a35c1] hover:underline">Back to PaperPilot</a>
+    </section>
+  </main>
+  <div id="googleAccountModal" class="google-review-backdrop fixed inset-0 z-50 grid place-items-center p-4" hidden>
+    <section class="google-review-dialog w-full max-w-md rounded-3xl border border-[#e9e2f3] bg-white p-7 shadow-2xl shadow-slate-950/20 sm:p-8"
+      role="dialog" aria-modal="true" aria-labelledby="googleReviewTitle" aria-describedby="googleReviewDescription" tabindex="-1">
+      <h2 id="googleReviewTitle" class="text-center text-xl font-bold text-slate-900">Is this your account?</h2>
+      <p id="googleReviewDescription" class="mt-2 text-center leading-6 text-slate-600">You’re signing in to PaperPilot as:</p>
+      <div class="google-account-row mt-5">
+        <div class="google-account-avatar">
+          <img id="googleReviewPhoto" class="h-full w-full object-cover" alt="" hidden>
+          <span id="googleReviewInitial">G</span>
+        </div>
+        <div class="google-account-details">
+          <p id="googleReviewName"></p>
+          <p id="googleReviewEmail"></p>
+        </div>
+      </div>
+      <p class="mt-3 text-center text-sm text-slate-500">Not your account? Cancel and choose another.</p>
+      <p id="googleReviewError" class="mt-3 min-h-5 text-center text-sm text-red-600" role="alert" aria-live="assertive"></p>
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <button id="cancelGoogleReview" type="button" class="rounded-xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6a35c1] disabled:cursor-wait disabled:opacity-60">No, cancel</button>
+        <button id="confirmGoogleReview" type="button" class="rounded-xl bg-[#6a35c1] px-4 py-3 font-semibold text-white transition hover:bg-[#5829a6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6a35c1] disabled:cursor-wait disabled:opacity-60">Yes, sign in</button>
+      </div>
+    </section>
+  </div>
+  <div id="googleLoginToast" class="google-login-toast" role="status" aria-live="polite" hidden></div>
+  <div id="googleSuccessModal" class="google-review-backdrop fixed inset-0 z-[60] grid place-items-center p-4" hidden>
+    <section class="google-review-dialog google-success-dialog w-full max-w-md rounded-3xl sm:p-8"
+      role="dialog" aria-modal="true" aria-labelledby="googleSuccessTitle" aria-describedby="googleSuccessMessage" tabindex="-1">
+      <div class="google-success-icon" aria-hidden="true">✓</div>
+      <h2 id="googleSuccessTitle" class="mt-4 text-center text-xl font-bold text-slate-900">Successfully Signed In!</h2>
+      <p id="googleSuccessMessage" class="mt-2 text-center leading-6 text-slate-600"></p>
+      <p class="google-success-countdown mt-2 text-center text-sm text-slate-500">Opening your dashboard in 2 seconds.</p>
+      <button id="googleSuccessDashboard" type="button" class="mt-5 min-h-11 w-full rounded-xl bg-[#6a35c1] px-4 py-3 font-semibold text-white transition hover:bg-[#5829a6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6a35c1]">Go to Dashboard</button>
+    </section>
+  </div>
+  <script type="module" src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+body[data-ui="bad"] {
+  --page-bg: #f0ff00;
+  --surface: #fff3a6;
+  --surface-subtle: #ffccf2;
+  --surface-hover: #9ffaff;
+  --label-color: #3a1640;
+  --placeholder-color: #735665;
+  --ink: #1b1740;
+  --muted: #61475d;
+  --border: #ff24a8;
+  --purple: #f00091;
+  --purple-dark: #4a168b;
+  --primary-cta: #00c8db;
+  --primary-hover: #06a5b4;
+  --primary-border: #ff24a8;
+  --nav-bg: #ff4cb4;
+  --nav-border: #00c8db;
+  --nav-hover: #f0ff00;
+  --hero-title-primary: #ff168e;
+  --hero-title-accent: #007b70;
+  --department-border: #ff24a8;
+  --department-hover-border: #00a9c1;
+  --option-selected-bg: #ffccf2;
+  --control-hover-brightness: 1.08;
+  --lavender: #ffccf2;
+  --lavender-light: #fff3a6;
+  --shadow: 7px 8px 0 #f0009166;
+  --toast-bg: #f00091;
+  background-color: var(--page-bg);
+  background-image: repeating-linear-gradient(135deg, transparent 0 24px, #ff4cb414 24px 26px);
+  color: var(--ink);
+  font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+}
+
+body[data-ui="bad"][data-theme="dark"] {
+  --page-bg: #291a32;
+  --surface: #403047;
+  --surface-subtle: #4f294b;
+  --surface-hover: #174e54;
+  --label-color: #f8d9ef;
+  --placeholder-color: #c4a4b9;
+  --ink: #fff1bd;
+  --muted: #ead0e1;
+  --border: #ff4cb4;
+  --purple: #ff9bd6;
+  --purple-dark: #ffe400;
+  --primary-cta: #00c8db;
+  --primary-hover: #06a5b4;
+  --primary-border: #ff4cb4;
+  --nav-bg: #542253;
+  --nav-border: #00c8db;
+  --nav-hover: #81506e;
+  --hero-title-primary: #ffe400;
+  --hero-title-accent: #6cf4e8;
+  --department-border: #ff4cb4;
+  --department-hover-border: #00c8db;
+  --option-selected-bg: #542253;
+  --lavender: #542253;
+  --lavender-light: #403047;
+  --shadow: 7px 8px 0 #ff4cb466;
+  --toast-bg: #542253;
+  background-image: repeating-linear-gradient(135deg, transparent 0 24px, #ff4cb414 24px 26px);
+}
+
+body[data-ui="bad"] :is(button, input, select, textarea) {
+  font-family: "Courier New", monospace;
+}
+
+body[data-ui="bad"] :is(h1, h2, h3, .brand, .brand-wordmark) {
+  font-family: Impact, "Arial Black", sans-serif;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+body[data-ui="bad"] :is(h1, h2, h3, .page-intro h1, .page-intro h2, .section-heading h2, .topbar h2) {
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.65;
+  letter-spacing: .16em;
+  text-shadow: 1px 1px #00c8db;
+}
+
+body[data-ui="bad"] .hero h1 {
+  font-size: 19px;
+  line-height: 1.65;
+  letter-spacing: .16em;
+  text-shadow: 1px 1px #00c8db;
+}
+
+body[data-ui="bad"] :is(.eyebrow, .pill, .muted, .field-label-text, label, .section-heading, .form-heading p, .hero p) {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+body[data-ui="bad"] :is(.eyebrow, .pill) {
+  font-size: 18px;
+}
+
+body[data-ui="bad"] :is(.site-header, header.border-b) {
+  background-color: var(--nav-bg);
+  border-bottom: 5px double var(--nav-border);
+  box-shadow: 0 8px 0 #ff24a855;
+}
+
+body[data-ui="bad"] .nav-link {
+  border: 2px dotted var(--nav-border);
+  border-radius: 2px 14px 3px 11px;
+  padding: 7px 9px;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+body[data-ui="bad"] .main,
+body[data-ui="bad"] main.mx-auto {
+  max-width: 1540px;
+}
+
+body[data-ui="bad"] .topbar {
+  border-bottom: 4px dotted var(--purple);
+  transform: rotate(-.35deg);
+}
+
+body[data-ui="bad"] .hero {
+  border: 5px ridge #ff24a8;
+  border-radius: 3px 32px 5px 25px;
+  background: repeating-linear-gradient(115deg, #f8ff65 0 30px, #ffccf2 30px 60px);
+  box-shadow: 9px 10px 0 #00c8db88;
+}
+
+body[data-ui="bad"][data-theme="dark"] .hero {
+  background: repeating-linear-gradient(115deg, #58405f 0 30px, #38234e 30px 60px);
+}
+
+body[data-ui="bad"] .hero h1 {
+  font-size: 19px;
+  line-height: 1.65;
+  letter-spacing: .16em;
+  text-shadow: 1px 1px #00c8db;
+}
+
+body[data-ui="bad"] .hero p,
+body[data-ui="bad"] .muted {
+  color: var(--muted);
+}
+
+body[data-ui="bad"] .pill,
+body[data-ui="bad"] .eyebrow {
+  border: 1px dashed var(--purple);
+  background: var(--surface-subtle);
+  color: var(--purple-dark);
+  letter-spacing: .22em;
+}
+
+body[data-ui="bad"] :is(main > section, .search-panel, .quick-access-card, .login-card, .upload-card, .download-card, .department-card, .semester-card, .subject-card, .resource-card, .google-review-dialog, .logout-dialog) {
+  border: 3px dotted var(--border);
+  border-radius: 4px 22px 3px 18px;
+  background-color: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+body[data-ui="bad"] .search-panel {
+  padding: 18px 26px 30px 15px;
+  transform: rotate(.25deg);
+}
+
+body[data-ui="bad"] .login-card,
+body[data-ui="bad"] #uploadPage > .upload-card,
+body[data-ui="bad"] .download-card {
+  margin-left: 19px;
+  transform: rotate(-1deg);
+}
+
+body[data-ui="bad"][data-auth-page="login"] main > section {
+  transform: rotate(-1deg) translateX(12px);
+}
+
+body[data-ui="bad"] :is(.email-login-form, .form-grid, .library-controls, .uploads-controls) > :nth-child(even) {
+  transform: translateX(13px) rotate(.6deg);
+}
+
+body[data-ui="bad"][data-auth-page="login"] #emailLoginForm > label:nth-child(even) {
+  transform: translateX(9px) rotate(.5deg);
+}
+
+body[data-ui="bad"] .form-actions {
+  justify-content: flex-start;
+  padding-left: 19px;
+}
+
+body[data-ui="bad"] .form-actions > :last-child {
+  margin-top: 9px;
+}
+
+body[data-ui="bad"] .section-heading {
+  align-items: flex-start;
+  text-align: right;
+}
+
+body[data-ui="bad"] .quick-access-card:nth-child(even),
+body[data-ui="bad"] .resource-card:nth-child(even),
+body[data-ui="bad"] .department-card:nth-child(even),
+body[data-ui="bad"] .subject-card:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+body[data-ui="bad"] :is(input, select, textarea, .search-input) {
+  border: 2px dashed var(--purple);
+  border-radius: 2px 13px 3px 9px;
+  background-color: var(--surface-subtle);
+  color: var(--ink);
+}
+
+body[data-ui="bad"] :is(.primary-btn, .secondary-btn, .text-btn, .login-nav-button, .theme-toggle, .quick-access-card, main > section button:not([disabled]), header.border-b button:not([disabled]), .google-review-dialog button:not([disabled]), .logout-dialog button:not([disabled])) {
+  border: 3px ridge var(--primary-border);
+  border-radius: 2px 14px 3px 11px;
+  background: var(--surface-subtle);
+  color: var(--ink);
+  box-shadow: 3px 4px 0 #f0009144;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+body[data-ui="bad"] .primary-btn {
+  background: var(--surface-subtle);
+  color: var(--ink);
+}
+
+body[data-ui="bad"] :is(.primary-btn, .secondary-btn, .text-btn, .danger-btn, .back-link, .auth-mode-toggle) {
+  min-height: 44px;
+  border: 3px ridge var(--primary-border);
+  border-radius: 2px 14px 3px 11px;
+  background: var(--surface-subtle);
+  color: var(--ink);
+  box-shadow: 3px 4px 0 #f0009144;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+body[data-ui="bad"] :is(.primary-btn, .secondary-btn, .text-btn, .danger-btn, .back-link, .auth-mode-toggle):hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+}
+
+body[data-ui="bad"] :is(button, a):focus-visible,
+body[data-ui="bad"] :is(input, select, textarea):focus-visible {
+  outline: 4px solid #ff168e;
+  outline-offset: 3px;
+}
+
+body[data-ui="bad"] .login-card,
+body[data-ui="bad"] .google-review-dialog,
+body[data-ui="bad"] .logout-dialog {
+  background-image: repeating-linear-gradient(45deg, transparent 0 34px, #ff24a812 34px 37px);
+}
+
+body[data-ui="bad"] .google-login-button {
+  background: #00c8db;
+  color: #17213b;
+}
+
+body[data-ui="bad"] .search-controls,
+body[data-ui="bad"] .library-controls,
+body[data-ui="bad"] .uploads-controls {
+  gap: 14px 7px;
+}
+
+body[data-ui="bad"] footer {
+  border-top: 5px dotted var(--purple);
+  color: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+body[data-ui="bad"] .logout-backdrop,
+body[data-ui="bad"] .google-review-backdrop {
+  background: rgb(41 20 47 / 78%);
+  backdrop-filter: blur(1px);
+}
+
+@media (max-width: 768px) {
+  body[data-ui="bad"] .main,
+  body[data-ui="bad"] main.mx-auto {
+    padding-right: 11px;
+    padding-left: 17px;
+  }
+
+  body[data-ui="bad"] .topbar {
+    min-height: 78px;
+    margin-bottom: 21px;
+  }
+
+  body[data-ui="bad"] .hero {
+    gap: 5px;
+    padding: 20px 14px 25px 19px;
+    border-radius: 28px 3px 20px 4px;
+  }
+
+  body[data-ui="bad"] .hero-art {
+    margin-left: -16px;
+    transform: scale(.78) rotate(8deg);
+  }
+
+  body[data-ui="bad"] :is(.search-panel, .upload-card, .login-card, .download-card) {
+    padding: 17px 13px 23px 19px;
+  }
+
+  body[data-ui="bad"] .login-card,
+  body[data-ui="bad"] #uploadPage > .upload-card,
+  body[data-ui="bad"] .download-card {
+    margin-left: 6px;
+    transform: rotate(-.6deg);
+  }
+
+  body[data-ui="bad"][data-auth-page="login"] main > section {
+    transform: rotate(-.5deg) translateX(5px);
+  }
+
+  body[data-ui="bad"] :is(.email-login-form, .form-grid, .library-controls, .uploads-controls) > :nth-child(even) {
+    transform: translateX(5px) rotate(.3deg);
+  }
+
+  body[data-ui="bad"][data-auth-page="login"] #emailLoginForm > label:nth-child(even) {
+    transform: translateX(4px) rotate(.3deg);
+  }
+
+  body[data-ui="bad"] .form-actions {
+    padding-left: 4px;
+  }
+
+  body[data-ui="bad"] .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    margin: 3px 0;
+  }
+
+  body[data-ui="bad"] .quick-access-grid {
+    gap: 13px;
+  }
+
+  body[data-ui="bad"] .form-actions,
+  body[data-ui="bad"] .logout-confirm-actions {
+    gap: 9px;
+  }
+}
+
+@media (max-width: 430px) {
+  body[data-ui="bad"] .hero {
+    padding: 18px 11px 22px 15px;
+  }
+
+  body[data-ui="bad"] .hero h1 {
+    font-size: 19px;
+    letter-spacing: .16em;
+  }
+
+  body[data-ui="bad"] .search-panel {
+    margin-right: -3px;
+    margin-left: 3px;
+  }
+
+  body[data-ui="bad"] :is(.quick-access-card, .primary-btn, .secondary-btn, .text-btn) {
+    letter-spacing: .01em;
+  }
+
+  body[data-ui="bad"] .login-card,
+  body[data-ui="bad"] #uploadPage > .upload-card,
+  body[data-ui="bad"] .download-card {
+    margin-left: 0;
+  }
+
+  body[data-ui="bad"] .google-review-dialog,
+  body[data-ui="bad"] .logout-dialog {
+    padding: 20px 14px;
+  }
+}
